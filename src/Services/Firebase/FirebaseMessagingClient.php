@@ -1,11 +1,12 @@
 <?php
 
+namespace CongnqNexlesoft\SimpleFirebaseHttpV1\Services\Firebase;
+
 use Google\Auth\ApplicationDefaultCredentials;
 use Google\Auth\FetchAuthTokenInterface;
 use Google\Auth\HttpHandler\HttpHandlerFactory;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Utils;
 
 /**
  * (Last updated on July 2, 2024)
@@ -54,7 +55,6 @@ class FirebaseMessagingClient extends Client
         \App\Services\Firebase\dd($response->getBody()->getContents(), $response);
         return [];
     }
-
 
 
     // the token duration 1 hour, should cache this token
