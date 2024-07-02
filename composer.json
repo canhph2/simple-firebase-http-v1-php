@@ -1,0 +1,40 @@
+{
+  "name": "congnqnexlesoft/simple-firebase-http-v1-php",
+  "type": "library",
+  "description": "TODO",
+  "keywords": [
+    "firebase",
+    "http-v1",
+    "php"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Cong Nguyen Quang",
+      "email": "congnqnexlesoft@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.2.3",
+    "ext-json": "*",
+    "google/auth": "^1.8",
+    "guzzlehttp/guzzle": "^6.2.1|^7.0"
+  },
+  "require-dev": {
+  },
+  "autoload": {
+    "psr-4": {
+      "CongnqNexlesoft\\SimpleFirebaseHttpV1\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "CongnqNexlesoft\\SimpleFirebaseHttpV1\\": "src"
+    }
+  },
+  "config": {
+    "preferred-install": "dist"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
