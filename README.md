@@ -1,4 +1,4 @@
-# Simple Firebase HTTP v1 for PHP
+# A Simple Firebase library using HTTP v1 for PHP
 - Author: Cong Nguyen Quang
 - Docs: https://firebase.google.com/docs/cloud-messaging/migrate-v1
 - Reference the 3rd library: https://github.com/kreait/firebase-php

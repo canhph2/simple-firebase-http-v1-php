@@ -1,7 +1,7 @@
 {
   "name": "congnqnexlesoft/simple-firebase-http-v1-php",
   "type": "library",
-  "description": "TODO",
+  "description": "A Simple Firebase library using HTTP v1 for PHP",
   "keywords": [
     "firebase",
     "http-v1",
