@@ -9,6 +9,7 @@ use Google\Auth\ApplicationDefaultCredentials;
 use Google\Auth\FetchAuthTokenInterface;
 use Google\Auth\HttpHandler\HttpHandlerFactory;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\HandlerStack;
 
 /**
@@ -70,7 +71,6 @@ class FirebaseMessagingClient extends Client
         $credentials = ApplicationDefaultCredentials::getCredentials(self::API_CLIENT_SCOPES);
 
         // handle
-
         $headers = [
             'Content-Type' => 'application/json',
             'Authorization' => $this->getAuthToken(),
@@ -82,14 +82,19 @@ class FirebaseMessagingClient extends Client
                 'data' => $data
             ]
         ];
-        $response = $this->post('v1/projects/' . $credentials->getProjectId() . '/messages:send',
-            ['headers' => $headers, 'json' => $fcmData]);
+
+        try {
+            $response = $this->post('v1/projects/' . $credentials->getProjectId() . '/messages:send',
+                ['headers' => $headers, 'json' => $fcmData]);
+        } catch (RequestException $e) {
+            $response = $e->getResponse();
+        }
         return [
             'isSuccess' => $response->getStatusCode() === ResponseCodeEnum::HTTP_OK,
             'statusCode' => $response->getStatusCode(),
+            'reasonPhrase' => $response->getReasonPhrase(),
             'body' => json_decode($response->getBody()->getContents(), true),
         ]; // END
     }
-
 
 }
