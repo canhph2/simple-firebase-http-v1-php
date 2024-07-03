@@ -10,15 +10,13 @@ use CongnqNexlesoft\SimpleFirebaseHttpV1\Helpers\DirHelper;
  */
 class TempCacheService
 {
-    const CACHE_DIR = 'temp/cache';
-
     public function __construct()
     {
     }
 
     private function generateCacheFilePath(string $key): string
     {
-        return DirHelper::getWorkingDir(self::CACHE_DIR, $key);
+        return DirHelper::getWorkingDir(DirHelper::getFrameworkCacheDir(), $key);
     }
 
     /**
@@ -27,7 +25,7 @@ class TempCacheService
      */
     public function getCache(string $key): ?string
     {
-        return is_file($this->generateCacheFilePath($key)) ? file_get_contents($this->generateCacheFilePath($key)) : null;
+        return is_file($this->generateCacheFilePath($key)) ? base64_decode(file_get_contents($this->generateCacheFilePath($key))) : null;
     }
 
     /**
@@ -37,11 +35,6 @@ class TempCacheService
      */
     public function setCache(string $key, string $value)
     {
-        // validate
-        if (!DirHelper::isProjectSubDir(self::CACHE_DIR)) {
-            DirHelper::createProjectSubDir(self::CACHE_DIR);
-        }
-        // handle
-        return file_put_contents($this->generateCacheFilePath($key), $value);
+        return file_put_contents($this->generateCacheFilePath($key), base64_decode($value));
     }
 }

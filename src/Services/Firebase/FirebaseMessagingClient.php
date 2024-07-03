@@ -33,7 +33,7 @@ class FirebaseMessagingClient extends Client
         'https://www.googleapis.com/auth/securetoken',
     ];
     const MAX_AMOUNT_OF_TOKENS = 500; // for batching
-    const TEMP_CACHE_KEY = 'firebase_messaging_cache_1ab';
+    const TEMP_CACHE_KEY = 'firebase_messaging_1ayty';
 
     /** @var FetchAuthTokenInterface */
     private $credentials;

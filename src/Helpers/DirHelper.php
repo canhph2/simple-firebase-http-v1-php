@@ -50,19 +50,6 @@ class DirHelper
     }
 
     /**
-     * @param string $subDir
-     * @return bool TRUE if create a dir success, otherwise FALSE
-     */
-    public static function createProjectSubDir(string $subDir): bool
-    {
-        if (!is_dir(self::getWorkingDir($subDir))) {
-            mkdir(self::getWorkingDir($subDir), 775, true);
-            return is_dir(self::getWorkingDir($subDir));
-        }
-        return false;
-    }
-
-    /**
      * usage: <name>::join($part1, $part2, $morePart) -> "$part1/$part2/$morePart"
      * @param ...$dirOrFileParts
      * @return string|null
@@ -72,5 +59,23 @@ class DirHelper
         return join('/', array_filter($dirOrFileParts, function ($item) {
             return $item; // filter null or empty parts
         }));
+    }
+
+    /**
+     * Currently function supports Laravel, Symfony project only.
+     * @return string|null
+     */
+    public static function getFrameworkCacheDir(): ?string
+    {
+        // Symfony
+        if (self::isProjectSubDir('var/cache')) {
+            return self::getWorkingDir('var/cache'); // END
+        }
+        // Laravel
+        if (self::isProjectSubDir('storage/framework/cache')) {
+            return self::getWorkingDir('storage/framework/cache'); // END
+        }
+        //
+        return 'error'; // END
     }
 }
