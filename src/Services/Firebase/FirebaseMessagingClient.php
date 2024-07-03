@@ -147,7 +147,7 @@ class FirebaseMessagingClient extends Client
         ]; // END
     }
 
-    private function sendNotificationMultiple(string $title, string $body, array $deviceTokens, array $data = []): array
+    public function sendNotificationMultiple(string $title, string $body, array $deviceTokens, array $data = []): array
     {
         $responses = [];
         foreach ($deviceTokens as $deviceToken) {
