@@ -16,7 +16,7 @@ class TempCacheService
 
     private function generateCacheFilePath(string $key): string
     {
-        return DirHelper::getWorkingDir(DirHelper::getFrameworkCacheDir(), $key);
+        return DirHelper::getFrameworkCacheDir($key);
     }
 
     /**

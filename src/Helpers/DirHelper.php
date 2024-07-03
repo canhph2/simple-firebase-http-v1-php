@@ -65,17 +65,17 @@ class DirHelper
      * Currently function supports Laravel, Symfony project only.
      * @return string|null
      */
-    public static function getFrameworkCacheDir(): ?string
+    public static function getFrameworkCacheDir(...$subDirOrFiles): ?string
     {
+        $cacheDir = 'error';
         // Symfony
         if (self::isProjectSubDir('var/cache')) {
-            return self::getWorkingDir('var/cache'); // END
-        }
-        // Laravel
-        if (self::isProjectSubDir('storage/framework/cache')) {
-            return self::getWorkingDir('storage/framework/cache'); // END
+            $cacheDir = self::getWorkingDir('var/cache'); // END
+        } // Laravel
+        else if (self::isProjectSubDir('storage/framework/cache')) {
+            $cacheDir = self::getWorkingDir('storage/framework/cache'); // END
         }
         //
-        return 'error'; // END
+        return count($subDirOrFiles) ? self::join($cacheDir, ...$subDirOrFiles) : $cacheDir;
     }
 }
