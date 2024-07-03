@@ -63,6 +63,7 @@ class DirHelper
 
     /**
      * Currently function supports Laravel, Symfony project only.
+     * @param mixed ...$subDirOrFiles
      * @return string|null
      */
     public static function getFrameworkCacheDir(...$subDirOrFiles): ?string
