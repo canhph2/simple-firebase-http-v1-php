@@ -56,7 +56,7 @@ class DirHelper
     public static function createProjectSubDir(string $subDir): bool
     {
         if (!is_dir(self::getWorkingDir($subDir))) {
-            mkdir(self::getWorkingDir($subDir));
+            mkdir(self::getWorkingDir($subDir), 755, true);
             return is_dir(self::getWorkingDir($subDir));
         }
         return false;

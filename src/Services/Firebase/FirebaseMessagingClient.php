@@ -88,8 +88,8 @@ class FirebaseMessagingClient extends Client
         if ($credentials) {
             $tokenResponse = $credentials->fetchAuthToken(HttpHandlerFactory::build(
                 new Client(['handler' => HandlerStack::create()])));
-            $ggAuthToken = (new GoogleAuthToken($tokenResponse['token_type'] ?? null,
-                $tokenResponse['expires_in'] ?? 0, $tokenResponse['access_token'] ?? null))
+            $ggAuthToken = (new GoogleAuthToken($tokenResponse['access_token'] ?? null,
+                $tokenResponse['expires_in'] ?? 0, $tokenResponse['token_type'] ?? null))
                 ->setType(GoogleAuthToken::TYPE_FRESH);
             $ggAuthToken->setExpiresIn(GoogleAuthToken::AMOUNT_SECONDS_BEFORE_EXPIRED + 15); // todo test
             //        save fresh token to cache
@@ -138,7 +138,7 @@ class FirebaseMessagingClient extends Client
             $response = $e->getResponse();
         }
         return [
-            'deviceToken' => substr($deviceToken, 0, 20),
+            'deviceToken' => substr($deviceToken, 0, 20).'...',
             'isSuccess' => $response->getStatusCode() === ResponseCodeEnum::HTTP_OK,
             'statusCode' => $response->getStatusCode(),
             'reasonPhrase' => $response->getReasonPhrase(),
