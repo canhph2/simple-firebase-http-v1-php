@@ -35,6 +35,6 @@ class TempCacheService
      */
     public function setCache(string $key, string $value)
     {
-        return file_put_contents($this->generateCacheFilePath($key), base64_decode($value));
+        return file_put_contents($this->generateCacheFilePath($key), base64_encode($value));
     }
 }
