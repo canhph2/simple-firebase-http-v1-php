@@ -52,7 +52,7 @@ class FirebaseMessagingClient extends Client
         ];
         $response = $this->post('v1/projects/' . $credentials->getProjectId() . '/messages:send',
             ['headers' => $headers, 'json' => $fcmData]);
-        \App\Services\Firebase\dd($response->getBody()->getContents(), $response);
+        dd($response->getBody()->getContents(), $response); // todo
         return [];
     }
 
