@@ -3,6 +3,7 @@
 namespace CongnqNexlesoft\SimpleFirebaseHttpV1\Services\Firebase;
 
 use CongnqNexlesoft\SimpleFirebaseHttpV1\Classes\ValidationObj;
+use CongnqNexlesoft\SimpleFirebaseHttpV1\Enum\ResponseCodeEnum;
 use CongnqNexlesoft\SimpleFirebaseHttpV1\Helpers\ValidationHelper;
 use Google\Auth\ApplicationDefaultCredentials;
 use Google\Auth\FetchAuthTokenInterface;
@@ -43,7 +44,7 @@ class FirebaseMessagingClient extends Client
             return ValidationHelper::invalid('GOOGLE_APPLICATION_CREDENTIALS is not configured'); // END
         }
         $credentialsData = json_decode(file_get_contents(getenv('GOOGLE_APPLICATION_CREDENTIALS')), true);
-        if ($credentialsData['project_id'] ?? null) {
+        if (!($credentialsData['project_id'] ?? null)) {
             return ValidationHelper::invalid('Missing project_id in the service-account file'); // END
         }
         return ValidationHelper::valid();
@@ -63,8 +64,8 @@ class FirebaseMessagingClient extends Client
     public function sendNotification(string $title, string $body, array $deviceTokens, array $data = []): array
     {
         // validate
-        if($this->validate()->fails()){
-            return ['error' => $this->validate()->getError()]; // END
+        if ($this->validate()->fails()) {
+            return ['isSuccess' => false, 'error' => $this->validate()->getError()]; // END
         }
         $credentials = ApplicationDefaultCredentials::getCredentials(self::API_CLIENT_SCOPES);
 
@@ -83,10 +84,12 @@ class FirebaseMessagingClient extends Client
         ];
         $response = $this->post('v1/projects/' . $credentials->getProjectId() . '/messages:send',
             ['headers' => $headers, 'json' => $fcmData]);
-        dd($response->getBody()->getContents(), $response); // todo
-        return [];
+        return [
+            'isSuccess' => $response->getStatusCode() === ResponseCodeEnum::HTTP_OK,
+            'statusCode' => $response->getStatusCode(),
+            'body' => json_decode($response->getBody()->getContents(), true),
+        ]; // END
     }
-
 
 
 }
