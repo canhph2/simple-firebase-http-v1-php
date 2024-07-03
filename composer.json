@@ -18,7 +18,9 @@
     "php": "^7.2.3",
     "ext-json": "*",
     "google/auth": "^1.8",
-    "guzzlehttp/guzzle": "^6.2.1|^7.0"
+    "guzzlehttp/guzzle": "^6.2.1|^7.0",
+    "guzzlehttp/promises": "^1.4",
+    "guzzlehttp/psr7": "^1.7"
   },
   "require-dev": {
   },
