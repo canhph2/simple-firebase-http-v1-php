@@ -91,7 +91,6 @@ class FirebaseMessagingClient extends Client
             $ggAuthToken = (new GoogleAuthToken($tokenResponse['access_token'] ?? null,
                 $tokenResponse['expires_in'] ?? 0, $tokenResponse['token_type'] ?? null))
                 ->setType(GoogleAuthToken::TYPE_FRESH);
-            $ggAuthToken->setExpiresIn(GoogleAuthToken::AMOUNT_SECONDS_BEFORE_EXPIRED + 15); // todo test
             //        save fresh token to cache
             $this->tempCacheService->setCache(self::TEMP_CACHE_KEY, $ggAuthToken->toJson());
             //
