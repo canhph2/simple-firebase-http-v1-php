@@ -7,6 +7,8 @@ use DateTime;
 class GoogleAuthToken
 {
     const AMOUNT_SECONDS_BEFORE_EXPIRED = 300; // seconds
+    const TYPE_FRESH = 'TYPE_FRESH';
+    const TYPE_CACHE = 'TYPE_CACHE';
 
     /** @var string */
     private $access_token;
@@ -16,6 +18,8 @@ class GoogleAuthToken
     private $token_type;
     /** @var int */
     private $starting_at;
+    /** @var string */
+    private $type;
 
     /**
      * @param string $access_token
@@ -62,6 +66,28 @@ class GoogleAuthToken
     public function setTokenType(string $token_type): GoogleAuthToken
     {
         $this->token_type = $token_type;
+        return $this;
+    }
+
+    public function getStartingAt(): int
+    {
+        return $this->starting_at;
+    }
+
+    public function setStartingAt(int $starting_at): GoogleAuthToken
+    {
+        $this->starting_at = $starting_at;
+        return $this;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): GoogleAuthToken
+    {
+        $this->type = $type;
         return $this;
     }
 

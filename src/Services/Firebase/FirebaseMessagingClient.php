@@ -54,9 +54,12 @@ class FirebaseMessagingClient extends Client
         return sprintf('v1/projects/%s/messages:send', $credentials->getProjectId());
     }
 
-    private function generateHeaders(): array
+    /**
+     * @param GoogleAuthToken|null $authToken
+     * @return array
+     */
+    private function generateHeaders(GoogleAuthToken $authToken = null): array
     {
-        $authToken = $this->getAuthTokenOrCacheAuthToken();
         return [
             'Content-Type' => 'application/json',
             'Authorization' => $authToken ? $authToken->getAuthorization() : '',
@@ -74,7 +77,7 @@ class FirebaseMessagingClient extends Client
         //    cache token
         $cacheData = $this->tempCacheService->getCache(self::TEMP_CACHE_KEY);
         if ($cacheData) {
-            $ggAuthTokenCache = GoogleAuthToken::fromJson($cacheData);
+            $ggAuthTokenCache = GoogleAuthToken::fromJson($cacheData)->setType(GoogleAuthToken::TYPE_CACHE);
             if (!$ggAuthTokenCache->isExpired()) {
                 return $ggAuthTokenCache; // END
             }
@@ -85,8 +88,9 @@ class FirebaseMessagingClient extends Client
         if ($credentials) {
             $tokenResponse = $credentials->fetchAuthToken(HttpHandlerFactory::build(
                 new Client(['handler' => HandlerStack::create()])));
-            $ggAuthToken = new GoogleAuthToken($tokenResponse['token_type'] ?? null,
-                $tokenResponse['expires_in'] ?? 0, $tokenResponse['access_token'] ?? null); // END
+            $ggAuthToken = (new GoogleAuthToken($tokenResponse['token_type'] ?? null,
+                $tokenResponse['expires_in'] ?? 0, $tokenResponse['access_token'] ?? null))
+                ->setType(GoogleAuthToken::TYPE_FRESH);
             $ggAuthToken->setExpiresIn(GoogleAuthToken::AMOUNT_SECONDS_BEFORE_EXPIRED + 15); // todo test
             //        save fresh token to cache
             $this->tempCacheService->setCache(self::TEMP_CACHE_KEY, $ggAuthToken->toJson());
@@ -126,9 +130,10 @@ class FirebaseMessagingClient extends Client
                 'data' => $data
             ]
         ];
+        $authToken = $this->getAuthTokenOrCacheAuthToken();
         try {
             $response = $this->post($this->generateMessageSendURI(),
-                ['headers' => $this->generateHeaders(), 'json' => $payload]);
+                ['headers' => $this->generateHeaders($authToken), 'json' => $payload]);
         } catch (RequestException $e) {
             $response = $e->getResponse();
         }
@@ -138,6 +143,7 @@ class FirebaseMessagingClient extends Client
             'statusCode' => $response->getStatusCode(),
             'reasonPhrase' => $response->getReasonPhrase(),
             'body' => json_decode($response->getBody()->getContents(), true),
+            'authTokenType' => $authToken->getType(),
         ]; // END
     }
 
