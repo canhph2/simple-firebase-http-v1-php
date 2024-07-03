@@ -2,6 +2,8 @@
 
 namespace CongnqNexlesoft\SimpleFirebaseHttpV1\Services\Firebase;
 
+use CongnqNexlesoft\SimpleFirebaseHttpV1\Classes\ValidationObj;
+use CongnqNexlesoft\SimpleFirebaseHttpV1\Helpers\ValidationHelper;
 use Google\Auth\ApplicationDefaultCredentials;
 use Google\Auth\FetchAuthTokenInterface;
 use Google\Auth\HttpHandler\HttpHandlerFactory;
@@ -35,9 +37,38 @@ class FirebaseMessagingClient extends Client
         parent::__construct(['base_uri' => self::END_POINT, 'headers' => []]);
     }
 
-    public function sendNotification(string $title, string $body, array $deviceTokens, array $data = []): array
+    private function validate(): ValidationObj
+    {
+        if (!getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
+            return ValidationHelper::invalid('GOOGLE_APPLICATION_CREDENTIALS is not configured'); // END
+        }
+        $credentialsData = json_decode(file_get_contents(getenv('GOOGLE_APPLICATION_CREDENTIALS')), true);
+        if ($credentialsData['project_id'] ?? null) {
+            return ValidationHelper::invalid('Missing project_id in the service-account file'); // END
+        }
+        return ValidationHelper::valid();
+    }
+
+    // the token duration 1 hour, should cache this token
+    public function getAuthToken() // todo organize to own library
     {
         $credentials = ApplicationDefaultCredentials::getCredentials(self::API_CLIENT_SCOPES);
+        if ($credentials) {
+            $test4 = $credentials->fetchAuthToken(HttpHandlerFactory::build(
+                new Client(['handler' => HandlerStack::create()])));
+            return $test4['token_type'] . ' ' . $test4['access_token'];
+        }
+    }
+
+    public function sendNotification(string $title, string $body, array $deviceTokens, array $data = []): array
+    {
+        // validate
+        if($this->validate()->fails()){
+            return ['error' => $this->validate()->getError()]; // END
+        }
+        $credentials = ApplicationDefaultCredentials::getCredentials(self::API_CLIENT_SCOPES);
+
+        // handle
 
         $headers = [
             'Content-Type' => 'application/json',
@@ -57,14 +88,5 @@ class FirebaseMessagingClient extends Client
     }
 
 
-    // the token duration 1 hour, should cache this token
-    public function getAuthToken() // todo organize to own library
-    {
-        $credentials = ApplicationDefaultCredentials::getCredentials(self::API_CLIENT_SCOPES);
-        if ($credentials) {
-            $test4 = $credentials->fetchAuthToken(HttpHandlerFactory::build(
-                new Client(['handler' => HandlerStack::create()])));
-            return $test4['token_type'] . ' ' . $test4['access_token'];
-        }
-    }
+
 }
