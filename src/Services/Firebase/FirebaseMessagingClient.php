@@ -34,6 +34,8 @@ class FirebaseMessagingClient extends Client
     ];
     const MAX_AMOUNT_OF_TOKENS = 500; // for batching
     const TEMP_CACHE_KEY = 'firebase_messaging_1ayty';
+    /** @var int milliseconds */
+    const DELAY_SENDING_EACH_NOTIFICATION = 50;
 
     /** @var FetchAuthTokenInterface */
     private $credentials;
@@ -137,7 +139,7 @@ class FirebaseMessagingClient extends Client
             $response = $e->getResponse();
         }
         return [
-            'deviceToken' => substr($deviceToken, 0, 20).'...',
+            'deviceToken' => substr($deviceToken, 0, 20) . '...',
             'isSuccess' => $response->getStatusCode() === ResponseCodeEnum::HTTP_OK,
             'statusCode' => $response->getStatusCode(),
             'reasonPhrase' => $response->getReasonPhrase(),
@@ -151,6 +153,7 @@ class FirebaseMessagingClient extends Client
         $responses = [];
         foreach ($deviceTokens as $deviceToken) {
             $responses[] = $this->sendNotificationSingle($title, $body, $deviceToken, $data);
+            usleep(self::DELAY_SENDING_EACH_NOTIFICATION * 1000); // A ms (with A * 1000)
         }
         $countSuccess = count(array_filter($responses, function ($response) {
             return $response['isSuccess'] ?? null;
