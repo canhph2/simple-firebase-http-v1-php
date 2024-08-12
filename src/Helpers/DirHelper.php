@@ -2,11 +2,12 @@
 
 namespace CongnqNexlesoft\SimpleFirebaseHttpV1\Helpers;
 
+
 /**
  * (Last updated on August 12, 2024)
  * ### A Directory Helper
  * - Required:
- *   - File must place at /src/Helpers/DirHelper.php (Symfony project)
+ *   - File must place at /src/Helpers/DirHelper.php (Symfony project | Composer library project)
  *   - File must place at /app/Helpers/DirHelper.php (Laravel project)
  */
 class DirHelper
@@ -41,8 +42,12 @@ class DirHelper
      * @return string
      */
     public static function getWorkingDir(...$subDirOrFiles): string
-    {                            // |-Symfony project             |-Laravel project
+    {   //          Symfony project-|-Composer library project    |-Laravel project
         $workingDir = str_replace(['/src/Helpers/DirHelper.php', '/app/Helpers/DirHelper.php'], ['', ''], __FILE__);
+        // Composer library project
+        $workingDir = StrHelper::contains($workingDir, '/vendor/')
+            ? explode($workingDir, '/vendor/')[0] : $workingDir;
+        //
         return count($subDirOrFiles) ? self::join($workingDir, ...$subDirOrFiles) : $workingDir;
     }
 
