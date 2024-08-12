@@ -2,7 +2,6 @@
 
 namespace CongnqNexlesoft\SimpleFirebaseHttpV1\Helpers;
 
-
 /**
  * (Last updated on August 12, 2024)
  * ### A Directory Helper
@@ -46,7 +45,7 @@ class DirHelper
         $workingDir = str_replace(['/src/Helpers/DirHelper.php', '/app/Helpers/DirHelper.php'], ['', ''], __FILE__);
         // Composer library project
         $workingDir = StrHelper::contains($workingDir, '/vendor/')
-            ? explode($workingDir, '/vendor/')[0] : $workingDir;
+            ? explode( '/vendor/', $workingDir)[0] : $workingDir;
         //
         return count($subDirOrFiles) ? self::join($workingDir, ...$subDirOrFiles) : $workingDir;
     }
