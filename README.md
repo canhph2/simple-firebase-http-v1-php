@@ -1,11 +1,11 @@
 # A Simple Firebase library using HTTP v1 API for PHP
-- Author: Cong Nguyen Quang
+- Forked from author: Cong Nguyen Quang
 - Docs: https://firebase.google.com/docs/cloud-messaging/migrate-v1
 - Reference the 3rd library: https://github.com/kreait/firebase-php
 
 ## How to install
 ```shell
-composer require congnqnexlesoft/simple-firebase-http-v1-php
+composer require canhph2/simple-firebase-http-v1-php
 ```
 
 ## Required
